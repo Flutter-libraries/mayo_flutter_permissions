@@ -1,20 +1,28 @@
 name: mayo_flutter_permissions
-description: A new Flutter package project.
+description: Package for requesting permissions on Flutter
 version: 0.0.1
-homepage:
+homepage: https://mayosoftware.es
 
 environment:
   sdk: '>=3.1.1 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
+
   flutter:
     sdk: flutter
 
+  permission_handler: ^10.4.5
+
 dev_dependencies:
+  build_runner: ^2.1.5
+  firebase_storage_mocks: ^0.6.0+1
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  freezed: ^2.0.3+1
+  json_serializable: ^6.1.2
+  very_good_analysis: ^4.0.0+1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
