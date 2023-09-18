@@ -18,7 +18,8 @@ class PermissionsRepository {
 
   /// Request the permission to access the camera
   Future<bool> requestGalleryPermissions() async {
-    return (await Permission.photos.request()).isGranted;
+    final status = await Permission.photos.request();
+    return status.isGranted;
   }
 
   /// Request the permission to access the camera
