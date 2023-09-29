@@ -2,6 +2,12 @@ import 'package:permission_handler/permission_handler.dart';
 
 /// Repository to handle permissions
 class PermissionsRepository {
+  /// Open the settings of the app
+  Future<void> openSettings() async {
+    await openAppSettings();
+  }
+
+  /// PHOTOS AND CAMERA
   /// Check if the user has the permission to access the photos
   Future<bool> isPhotosPermissionsDenied() async {
     final status = await Permission.photos.status;
@@ -27,8 +33,18 @@ class PermissionsRepository {
     return (await Permission.camera.request()).isGranted;
   }
 
-  /// Open the settings of the app
-  Future<void> openSettings() async {
-    await openAppSettings();
+  /// LOCATION
+
+  /// Check if the user has the permission to access the location
+  Future<bool> isLocationPermissionsDenied() async {
+    final status = await Permission.location.status;
+
+    return status.isPermanentlyDenied;
+  }
+
+  /// Request the permission to access the location
+  Future<bool> requestLocationPermissions() async {
+    final status = await Permission.location.request();
+    return status.isGranted;
   }
 }
