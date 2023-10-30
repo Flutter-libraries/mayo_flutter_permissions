@@ -21,9 +21,15 @@ class PermissionsRepository {
 
     return status.isPermanentlyDenied;
   }
+  /// Check if the user has the permission to access the camera
+  Future<bool> isStorageStatusDenied() async {
+    final status = await Permission.storage.status;
+
+    return status.isPermanentlyDenied;
+  }
 
   /// Request the permission to access the camera
-  Future<bool> requestGalleryPermissions() async {
+  Future<bool> requestPhotoPermissions() async {
     final status = await Permission.photos.request();
     return status.isGranted;
   }
@@ -31,6 +37,10 @@ class PermissionsRepository {
   /// Request the permission to access the camera
   Future<bool> requestCameraPermissions() async {
     return (await Permission.camera.request()).isGranted;
+  }
+  /// Request the permission to access the camera
+  Future<bool> requestStoragePermissions() async {
+    return (await Permission.storage.request()).isGranted;
   }
 
   /// LOCATION

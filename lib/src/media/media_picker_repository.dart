@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mayo_flutter_permissions/mayo_flutter_permissions.dart';
 
@@ -20,11 +23,28 @@ class MediaPickerRepository {
 
   Future<XFile?> pickMediaFromGallery(MediaPickerConf conf) async {
     try {
-      if (await _permissionsRepository.isPhotosPermissionsDenied()) {
+      var requestPhotosPermissions = true;
+
+      if (Platform.isAndroid) {
+        final androidInfo = await DeviceInfoPlugin().androidInfo;
+        if (androidInfo.version.sdkInt <= 32) {
+          requestPhotosPermissions = false;
+        } else {
+          requestPhotosPermissions = true;
+        }
+      }
+
+      if (requestPhotosPermissions &&
+              await _permissionsRepository.isPhotosPermissionsDenied() ||
+          !requestPhotosPermissions &&
+              await _permissionsRepository.isStorageStatusDenied()) {
         throw NotPermissionException();
       }
 
-      if (await _permissionsRepository.requestGalleryPermissions()) {
+      if (requestPhotosPermissions &&
+              await _permissionsRepository.requestPhotoPermissions() ||
+          !requestPhotosPermissions &&
+              await _permissionsRepository.requestStoragePermissions()) {
         if (conf.type == SourceMediaType.image) {
           final value = await picker.pickImage(source: ImageSource.gallery);
 
