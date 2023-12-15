@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mayo_flutter_permissions/mayo_flutter_permissions.dart';
 
@@ -91,6 +92,37 @@ class MediaPickerRepository {
       } else {
         return null;
       }
+    } on NotPermissionException {
+      rethrow;
+    } catch (e) {
+      throw MediaPickerFailure();
+    }
+  }
+
+  ///
+  Future<XFile?> pickFile(
+      {List<String>? allowedExtensions, bool anyType = false}) async {
+    try {
+      if (await _permissionsRepository.isStorageStatusDenied()) {
+        throw NotPermissionException();
+      }
+
+      if (await _permissionsRepository.requestStoragePermissions()) {
+        final value = await FilePicker.platform.pickFiles(
+          allowedExtensions: anyType ? null : allowedExtensions,
+          type: anyType ? FileType.any : FileType.custom,
+        );
+        if (value != null) {
+          return XFile(
+            value.files.single.path!,
+            name: value.files.single.name,
+            length: value.files.single.size,
+            mimeType: value.files.single.extension,
+            bytes: value.files.single.bytes,
+          );
+        }
+      }
+      return null;
     } on NotPermissionException {
       rethrow;
     } catch (e) {
