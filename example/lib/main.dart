@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:example/media/cubit/media_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mayo_flutter_permissions/mayo_flutter_permissions.dart';
 
 void main() {
   runApp(const MyApp());
@@ -93,8 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
             children: <Widget>[
               const Text(
                 'Permissions for media library',
@@ -133,6 +133,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: 200,
                           child: const Icon(Icons.select_all))
                       : _LocalImage(state.localPathCamera)),
+
+              // Request location permissions
+              TextButton(
+                  onPressed: () => LocationRepository().getLocation(),
+                  child: Text('Get location'))
             ],
           ),
         ),
