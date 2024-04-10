@@ -1,6 +1,6 @@
 name: mayo_flutter_permissions
 description: Package for requesting permissions on Flutter
-version: 0.0.1
+version: 0.0.11
 homepage: https://mayosoftware.es
 
 environment:

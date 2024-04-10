@@ -29,6 +29,25 @@ class LocationRepository {
     }
   }
 
+  ///
+  Stream<LocationData?> streamLocation() async* {
+    try {
+      if (await _permissionsRepository.isLocationPermissionsDenied()) {
+        throw NotPermissionException();
+      }
+
+      // if (await _permissionsRepository.requestLocationPermissions()) {
+      yield* Location().onLocationChanged;
+
+      // }
+      // return null;
+    } on NotPermissionException {
+      rethrow;
+    } catch (e) {
+      throw LocationAccessFailure();
+    }
+  }
+
   /// Calculate distance between 2 points
   Future<double> calculateDistance(
     double lat1,
