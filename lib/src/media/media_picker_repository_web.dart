@@ -79,25 +79,20 @@ class MediaPickerRepository {
   Future<XFile?> pickFile(
       {List<String>? allowedExtensions, bool anyType = false}) async {
     try {
-      if (await _permissionsRepository.isStorageStatusDenied()) {
-        throw NotPermissionException();
+      final value = await FilePicker.platform.pickFiles(
+        allowedExtensions: anyType ? null : allowedExtensions,
+        type: anyType ? FileType.any : FileType.custom,
+      );
+      if (value != null) {
+        return XFile(
+          value.files.single.path!,
+          name: value.files.single.name,
+          length: value.files.single.size,
+          mimeType: value.files.single.extension,
+          bytes: value.files.single.bytes,
+        );
       }
 
-      if (await _permissionsRepository.requestStoragePermissions()) {
-        final value = await FilePicker.platform.pickFiles(
-          allowedExtensions: anyType ? null : allowedExtensions,
-          type: anyType ? FileType.any : FileType.custom,
-        );
-        if (value != null) {
-          return XFile(
-            value.files.single.path!,
-            name: value.files.single.name,
-            length: value.files.single.size,
-            mimeType: value.files.single.extension,
-            bytes: value.files.single.bytes,
-          );
-        }
-      }
       return null;
     } on NotPermissionException {
       rethrow;
