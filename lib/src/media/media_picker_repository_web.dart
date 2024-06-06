@@ -25,47 +25,22 @@ class MediaPickerRepository {
 
   Future<XFile?> pickMediaFromGallery(MediaPickerConf conf) async {
     try {
-      var requestPhotosPermissions = true;
+      if (conf.type == SourceMediaType.image) {
+        final value = await picker.pickImage(source: ImageSource.gallery);
 
-      if (Platform.isAndroid) {
-        final androidInfo = await DeviceInfoPlugin().androidInfo;
-        if (androidInfo.version.sdkInt <= 32) {
-          requestPhotosPermissions = false;
-        } else {
-          requestPhotosPermissions = true;
-        }
-      }
+        return value;
+      } else if (conf.type == SourceMediaType.video) {
+        final value = await picker.pickVideo(source: ImageSource.gallery);
 
-      if (requestPhotosPermissions &&
-              await _permissionsRepository.isPhotosPermissionsDenied() ||
-          !requestPhotosPermissions &&
-              await _permissionsRepository.isStorageStatusDenied()) {
-        throw NotPermissionException();
-      }
-
-      if (requestPhotosPermissions &&
-              await _permissionsRepository.requestPhotoPermissions() ||
-          !requestPhotosPermissions &&
-              await _permissionsRepository.requestStoragePermissions()) {
-        if (conf.type == SourceMediaType.image) {
-          final value = await picker.pickImage(source: ImageSource.gallery);
-
-          return value;
-        } else if (conf.type == SourceMediaType.video) {
-          final value = await picker.pickVideo(source: ImageSource.gallery);
-
-          return value;
-        } else {
-          final value = await picker.pickMedia();
-
-          return value;
-        }
+        return value;
       } else {
-        return null;
+        final value = await picker.pickMedia();
+
+        return value;
       }
     } on NotPermissionException {
       rethrow;
-    } catch (e) {
+    } catch (e, s) {
       throw MediaPickerFailure();
     }
   }
