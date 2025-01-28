@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mayo_flutter_permissions/mayo_flutter_permissions.dart';
 
@@ -22,6 +21,50 @@ class MediaPickerConf {
 class MediaPickerRepository {
   final PermissionsRepository _permissionsRepository = PermissionsRepository();
   final picker = ImagePicker();
+
+  Future<XFile?> justPickMediaFromGallery(MediaPickerConf conf) async {
+    try {
+      if (conf.type == SourceMediaType.image) {
+        final value = await picker.pickImage(source: ImageSource.gallery);
+
+        return value;
+      } else if (conf.type == SourceMediaType.video) {
+        final value = await picker.pickVideo(source: ImageSource.gallery);
+
+        return value;
+      } else {
+        final value = await picker.pickMedia();
+
+        return value;
+      }
+    } on NotPermissionException {
+      rethrow;
+    } catch (e) {
+      throw MediaPickerFailure();
+    }
+  }
+
+  Future<XFile?> justPickMediaFromCamera(MediaPickerConf conf) async {
+    try {
+      if (conf.type == SourceMediaType.image) {
+        final value = await picker.pickImage(source: ImageSource.camera);
+
+        return value;
+      } else if (conf.type == SourceMediaType.video) {
+        final value = await picker.pickVideo(source: ImageSource.camera);
+
+        return value;
+      } else {
+        final value = await picker.pickMedia();
+
+        return value;
+      }
+    } on NotPermissionException {
+      rethrow;
+    } catch (e) {
+      throw MediaPickerFailure();
+    }
+  }
 
   Future<XFile?> pickMediaFromGallery(MediaPickerConf conf) async {
     try {
