@@ -19,6 +19,10 @@ class MediaPickerRepository {
   final PermissionsRepository _permissionsRepository = PermissionsRepository();
   final picker = ImagePicker();
 
+  Future<XFile?> justPickMediaFromGallery(MediaPickerConf conf) async {
+    return pickMediaFromGallery(conf);
+  }
+
   Future<XFile?> pickMediaFromGallery(MediaPickerConf conf) async {
     try {
       if (conf.type == SourceMediaType.image) {
@@ -39,6 +43,10 @@ class MediaPickerRepository {
     } catch (e, s) {
       throw MediaPickerFailure();
     }
+  }
+
+  Future<XFile?> justPickMediaFromCamera(MediaPickerConf conf) async {
+    return pickMediaFromCamera(conf);
   }
 
   Future<XFile?> pickMediaFromCamera(MediaPickerConf conf) async {
