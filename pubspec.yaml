@@ -4,8 +4,7 @@ version: 0.0.11
 homepage: https://mayosoftware.es
 
 environment:
-  sdk: ">=3.1.1 <4.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=3.6.0 <4.0.0"
 
 dependencies:
   device_info_plus: ^11.2.1
@@ -18,7 +17,7 @@ dependencies:
 
   file_picker: ^8.1.2
 
-  location: ^7.0.1
+  location: ^8.0.0
 
   permission_handler: ^11.1.0
 
